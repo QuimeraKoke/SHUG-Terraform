@@ -1,0 +1,6 @@
+# Build the image based on the packer.json data and write the output in the packer_data.txt file
+packer build packer.json | tee packer_data.txt
+# Search for AMI_ID and write it in ami.txt file
+tail -2 packer_data.txt | head -2 | awk 'match($0, /ami-.*/) { print substr($0, RSTART, RLENGTH) }' >  ami.txt
+# Set env variable with AMI id
+AMI_ID="$(cat ami.txt)"

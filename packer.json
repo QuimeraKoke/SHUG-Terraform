@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "aws_access_key"   : "",
+    "aws_secret_key"   : ""
+    },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "ami-cd0f5cb6",
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "SHUG Test {{timestamp}}",
+    "tags" : {
+      "Name": "SHUG {{timestamp}}",
+      "TimeStamp": "{{isotime `02-Jan-06 03_04_05`}}",
+      "Comments": "Ubuntu based AMI"
+    }
+  }],
+
+  "provisioners": [{
+    "type": "file",
+    "source": "index.html",
+    "destination": "~/"
+  },{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "sudo apt-get update",
+      "sudo apt-get install nginx -y",
+      "sudo mv index.html /var/www/html/"
+    ]
+  }]
+}
